@@ -4,7 +4,10 @@ from huggingface_hub import InferenceClient
 from duckduckgo_search import DDGS
 
 app = Flask(__name__)
-client = InferenceClient("google/gemma-2-2b-it")
+
+# Token-ul tău integrat
+HF_TOKEN = "Hf_dOhyzZHYtVFtGzMpaMDqbOBYWTswGWWQoc"
+client = InferenceClient("google/gemma-2-2b-it", token=HF_TOKEN)
 
 def search_web(query):
     try:
@@ -29,7 +32,7 @@ HTML_PAGE = """
         .msg { padding: 12px 16px; margin: 10px 0; border-radius: 10px; line-height: 1.5; }
         .user { background: #282a2c; text-align: right; }
         .ai { background: #1e1f20; text-align: left; border: 1px solid #333; }
-        input { width: 75%; padding: 12px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-size: 1rem; }
+        input { width: 70%; padding: 12px; background: #222; color: white; border: 1px solid #444; border-radius: 8px; font-size: 1rem; }
         button { padding: 12px 18px; background: #a8c7fa; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
@@ -95,7 +98,7 @@ def chat():
     try:
         response = client.chat_completion(messages=messages, max_tokens=500)
         reply = response.choices[0].message.content
-    except Exception:
+    except Exception as e:
         reply = "Server is busy, try again in a moment."
 
     return {"reply": reply}
